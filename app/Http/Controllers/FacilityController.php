@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Facility;
+use App\SubCounty;
+use App\County;
 use Illuminate\Http\Request;
 
 class FacilityController extends Controller
@@ -14,7 +16,24 @@ class FacilityController extends Controller
      */
     public function index()
     {
-        //
+        //get all facilities
+
+        $facilities = Facility::all();
+
+        return response()->json($facilities);
+    }
+
+    /**
+     * Display all facilities in a sub county in a county.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function org_units()
+    {
+        //get all facilities
+        $facilities = County::with('subCounties.facilities')->get()->toArray();             
+
+        return response()->json($facilities);
     }
 
     /**

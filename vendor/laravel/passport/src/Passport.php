@@ -2,11 +2,11 @@
 
 namespace Laravel\Passport;
 
-use Mockery;
-use DateInterval;
 use Carbon\Carbon;
+use DateInterval;
 use DateTimeInterface;
 use Illuminate\Support\Facades\Route;
+use Mockery;
 
 class Passport
 {
@@ -137,6 +137,13 @@ class Passport
      * @var bool
      */
     public static $unserializesCookies = false;
+
+    /**
+     * Indicates the scope should inherit its parent scope.
+     *
+     * @var bool
+     */
+    public static $withInheritedScopes = false;
 
     /**
      * Enable the implicit grant type.
