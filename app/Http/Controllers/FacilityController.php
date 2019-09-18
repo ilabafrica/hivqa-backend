@@ -31,7 +31,15 @@ class FacilityController extends Controller
     public function org_units()
     {
         //get all facilities
-        $facilities = County::with('subCounties.facilities')->get()->toArray();             
+        
+        $ITEMS_PER_PAGE = 100;
+
+        $facilities = Facility::latest()->paginate($ITEMS_PER_PAGE);
+        foreach($facilities as $facility)
+                {
+                    $facility->sub_county_name = $facility->subCounty->name;
+                    $facility->county_name = $facility->subCounty->county->name;
+                }
 
         return response()->json($facilities);
     }

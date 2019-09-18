@@ -23,6 +23,6 @@ class SubCounty extends Model
    	 */
     public function facilities()
     {
-      return $this->hasMany('App\Facility');
+      return $this->hasMany('App\Facility', 'sub_county_id', 'id');
     }
 }
