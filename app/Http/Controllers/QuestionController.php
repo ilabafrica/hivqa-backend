@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Checklist;
+use App\Section;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,25 @@ class QuestionController extends Controller
     public function index()
     {
         //
+        $questions = Checklist::with('section.question')->get();
+        
+        return response()->json($questions);
+
     }
+
+    /**
+     * Display a all questions in a checklist.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function question_per_checklist($id)
+    {
+        //
+        $questions = Checklist::with('section.question.question_responses')->where('id', $id)->get();
+        
+        return response()->json($questions);
+
+    }    
 
     /**
      * Show the form for creating a new resource.

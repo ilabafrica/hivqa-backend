@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Checklist extends Model
+class Responses extends Model
 {
     //
      //
-  	protected $table = 'checklists';
+  	protected $table = 'responses';
 
      /**
    	 * Relationship with facilities.
