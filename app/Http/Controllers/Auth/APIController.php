@@ -66,14 +66,14 @@ class APIController extends Controller
         // // Check if a user with the specified email exists
         // $user = User::whereEmail(request('username'))->first();
 
-        // if (! $user) {
+        if (! $user) {
 
-        //     //flash('Wrong email or password')->error();
-        //     return response()->json([
-        //         'message' => 'Wrong email or password',
-        //         'status' => 422,
-        //     ], 422);
-        //}
+            //flash('Wrong email or password')->error();
+            return response()->json([
+                'message' => 'Wrong email or password',
+                'status' => 422,
+            ], 422);
+        }
         // /*
         //  If a user with the email was found - check if the specified password
         //  belongs to this user
