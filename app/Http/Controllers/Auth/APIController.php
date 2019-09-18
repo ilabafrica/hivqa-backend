@@ -27,7 +27,7 @@ class APIController extends Controller
             'activation_token' => str_random(60)
         ]);
 
-        $user->notify(new SignupActivate($user));
+        // $user->notify(new SignupActivate($user));
 
         return response()->json([
             'message' => 'Account created',
