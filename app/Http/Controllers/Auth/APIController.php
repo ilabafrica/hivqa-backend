@@ -27,7 +27,7 @@ class APIController extends Controller
             'activation_token' => str_random(60)
         ]);
 
-        // $user->notify(new SignupActivate($user));
+        //$user->notify(new SignupActivate($user));
 
         return response()->json([
             'message' => 'Account created',
@@ -55,9 +55,9 @@ class APIController extends Controller
             return $response->getBody();
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             if ($e->getCode() === 400) {
-                return responce()->json('Invalid Request, Please enter a username or a password', $e->getCode());
-            }else if ($e->getCode ()===401) {
-                return responce()->json('Your Credentials are incorrect. Please try again'. $e->getCode());
+                return response()->json('Invalid Request, Please enter a username or a password', $e->getCode());
+            }else if ($e->getCode()===401) {
+                return response()->json('Your Credentials are incorrect. Please try again'. $e->getCode());
             }
 
          return response()->json('Something went Wrong'. $e->getCode());
@@ -66,14 +66,14 @@ class APIController extends Controller
         // // Check if a user with the specified email exists
         // $user = User::whereEmail(request('username'))->first();
 
-        if (! $user) {
+        // if (! $user) {
 
-            //flash('Wrong email or password')->error();
-            return response()->json([
-                'message' => 'Wrong email or password',
-                'status' => 422,
-            ], 422);
-        }
+        //     //flash('Wrong email or password')->error();
+        //     return response()->json([
+        //         'message' => 'Wrong email or password',
+        //         'status' => 422,
+        //     ], 422);
+        // }
         // /*
         //  If a user with the email was found - check if the specified password
         //  belongs to this user
