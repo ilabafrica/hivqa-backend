@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Checklist;
 use App\Section;
 use App\Question;
+use App\Survey;
+use App\SurveyQuestion;
 use Illuminate\Http\Request;
+use DB;
 
 class QuestionController extends Controller
 {
@@ -28,15 +31,17 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function question_per_checklist($id)
+    public function question_per_checklist($id, $facility, $sdp)
     {
-        //
-        // $questions = Checklist::with('section.question.question_responses')->where('id', $id)->get();
-        $ITEMS_PER_PAGE = 100;
+        $questions = Checklist::with('section.question.question_responses')->where('id', $id)->get();
+        foreach ($questions as $key => $value) {
+            $checklist_name = $value->name;
+            $checklist_id = $value->id;
+        }
 
-        $questions = Question::latest()->paginate($ITEMS_PER_PAGE);
+        $response = ['data' =>$questions, 'checklist_name' =>$checklist_name, 'facility' =>$facility, 'sdp'=>$sdp ];
         
-        return response()->json($questions);
+        return response()->json($response);
 
     }    
 
@@ -48,6 +53,7 @@ class QuestionController extends Controller
     public function create()
     {
         //
+
     }
 
     /**
@@ -58,7 +64,51 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $survey = new Survey;
+        $survey->checklist_id = 1;
+        // $survey->qa_officer = Auth::user()->id;
+        $survey->qa_officer = 'Ann';
+        $survey->facility_id = 2;
+        $survey->sdp_id = 2;
+        // $survey->comment = $request->overall_comments;
+        // $survey->date_started = $request->date_started;
+        // $survey->date_ended = $request->date_ended;
+        // $survey->date_submitted = $request->date_submitted;
+        $survey->save();
+
+        //  Proceed to form-fields
+        // get all fields and insert into survey_answers
+
+        $questions =DB::table('questions')
+                    ->join('sections', 'questions.section_id', '=', 'sections.id')
+                    ->join('checklists', 'sections.checklist_id', '=', 'checklists.id')
+                    ->where('checklists.id', '=', '1')
+                    ->get(array('questions.name','questions.id'));
+
+        $response = '';
+        
+        foreach ($questions as $question) {
+            $survey_answers = new SurveyQuestion;
+            $survey_answers->survey_id = $survey->id;
+            $survey_answers->question_id = $question->id;
+           
+           // //loop through the results entered and get the response for each questions
+            foreach ($request->all() as $key => $value)
+            {
+                if ($question->id == $key) {
+                    $response = $value  ;
+                    break;
+                }else if ($question->id != $key) {
+                    $response = '';
+                }   
+           } 
+            // save the response for respective question
+            $survey_answers->response = $response;
+            $survey_answers->save();
+        }
+
+        return response()->json('Done');
     }
 
     /**
