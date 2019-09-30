@@ -22,6 +22,7 @@ Route::middleware('cors:api')->group( function () {
 	Route::resource('/facilities', 'FacilityController');
 	Route::resource('/questions', 'QuestionController');
 	Route::get('/org_units', 'FacilityController@org_units');
+	Route::get('/get_sdps', 'FacilityController@get_sdps');
 	Route::get('/question_per_checklist/{id}/{facility}/{sdp}', 'QuestionController@question_per_checklist');
 });
 Route::middleware('auth:api')->group( function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facility;
 use App\SubCounty;
 use App\County;
+use App\Sdp;
 use Illuminate\Http\Request;
 
 class FacilityController extends Controller
@@ -42,6 +43,16 @@ class FacilityController extends Controller
                 }
 
         return response()->json($facilities);
+    }
+    public function get_sdps()
+    {
+        //get all facilities
+        $ITEMS_PER_PAGE = 100;
+        
+        $sdps = Sdp::latest()->paginate($ITEMS_PER_PAGE);
+        
+
+        return response()->json($sdps);
     }
 
     /**

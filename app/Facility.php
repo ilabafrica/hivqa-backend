@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Facility extends Model
 {
     //
-  	protected $table = 'facilities_'; //change to facilities
+  	protected $table = 'facilities'; //change to facilities
 
     public function subCounty()
      {
