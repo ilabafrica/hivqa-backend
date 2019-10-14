@@ -48,7 +48,7 @@ class UserController extends Controller
 
             try {
                 $user->save();
-                DB::table('role_user')->insert(["user_id" => $user->id, "role_id" => $request->role]);
+                DB::table('role_user')->insert(["user_id" => $user->id, "role_id" => $request->role,"county_id" => $request->county]);
                 return response()->json('status => 200');
             } catch (\Illuminate\Database\QueryException $e) {
                 return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
