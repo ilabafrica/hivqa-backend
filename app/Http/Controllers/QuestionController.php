@@ -6,7 +6,7 @@ use App\Checklist;
 use App\Section;
 use App\Question;
 use App\Survey;
-use App\SurveyQuestion;
+use App\SurveyData;
 use Illuminate\Http\Request;
 use DB;
 
@@ -89,7 +89,7 @@ class QuestionController extends Controller
         $response = '';
         
         foreach ($questions as $question) {
-            $survey_answers = new SurveyQuestion;
+            $survey_answers = new SurveyData;
             $survey_answers->survey_id = $survey->id;
             $survey_answers->question_id = $question->id;
            

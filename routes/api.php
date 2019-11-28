@@ -24,6 +24,8 @@ Route::middleware('cors:api')->group( function () {
 	Route::get('/org_units', 'FacilityController@org_units');
 	Route::get('/get_sdps', 'FacilityController@get_sdps');
 	Route::get('/question_per_checklist/{id}/{facility}/{sdp}', 'QuestionController@question_per_checklist');
+	Route::get('/specific_checklist_survey/{id}', 'SurveyController@specific_checklist_survey');
+	Route::get('/survey_data/{id}', 'SurveyController@survey_data');
 });
 Route::middleware('auth:api')->group( function () {
 	Route::post('/logout', 'Auth\APIController@logout');
