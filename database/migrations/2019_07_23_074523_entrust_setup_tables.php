@@ -20,7 +20,7 @@ class EntrustSetupTables extends Migration
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
-    }
+       });
 
     // Create table for associating roles to users (Many-to-Many)
         Schema::create('role_user', function (Blueprint $table) {
@@ -43,14 +43,15 @@ class EntrustSetupTables extends Migration
 
      // Create table for associating permissions to roles (Many-to-Many)
         Schema::create('permission_role', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('permission_id')->unsigned();
             $table->integer('role_id')->unsigned();
             $table->foreign('permission_id')->references('id')->on('permissions')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('role_id')->references('id')->on('roles')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->primary(['permission_id', 'role_id']);
+                ->onUpdate('cascade')->onDelete('cascade');           
         });
+    }
 
     /**
      * Reverse the migrations.

@@ -27,7 +27,7 @@ class APIController extends Controller
             'activation_token' => str_random(60)
         ]);
 
-        // $user->notify(new SignupActivate($user));
+        //$user->notify(new SignupActivate($user));
 
         return response()->json([
             'message' => 'Account created',
@@ -37,7 +37,29 @@ class APIController extends Controller
     }
 
     public function login(Request $request)
-    {
+    {   
+       // \Log::info($request->all());
+       //Check if a user with the specified email exists
+        $user = User::whereEmail(request('username'))->first();
+
+        if (! $user) {
+
+            //flash('Wrong email or password')->error();
+            return response()->json([
+                'message' => 'Wrong email',
+                'status' => 422,
+            ], 422);
+        }
+        //  If a user with the email was found - check if the specified password
+        //  belongs to this user
+        // */
+        if (! \Hash::check(request('password'), $user->password)) {
+            return response()->json([
+                'message' => 'Wrong password',
+                'status' => 422,
+            ], 422);
+        }
+
 
         $http = new \GuzzleHttp\Client;
 
@@ -52,85 +74,38 @@ class APIController extends Controller
            ]
          ]);
 
-            return $response->getBody();
+            if ( $response->getStatusCode() != 200) {
+                return response()->json([
+                     'message' => 'Wrong email or password',
+                     'status' => 422,
+                 ]);
+            }
+
+        $data = json_decode($response->getBody());
+
+        // Format the final response in a desirable format
+        return response()->json([
+            'access_token' => $data->access_token,
+            'user' => $user,
+            'status' => 200,
+        ]);
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             if ($e->getCode() === 400) {
-                return responce()->json('Invalid Request, Please enter a username or a password', $e->getCode());
-            }else if ($e->getCode ()===401) {
-                return responce()->json('Your Credentials are incorrect. Please try again'. $e->getCode());
+                return response()->json('Invalid Request, Please enter a username or a password', $e->getCode());
+            }else if ($e->getCode()===401) {
+                return response()->json('Your Credentials are incorrect. Please try again'. $e->getCode());
             }
 
          return response()->json('Something went Wrong'. $e->getCode());
 
-        }
-        // // Check if a user with the specified email exists
-        // $user = User::whereEmail(request('username'))->first();
-
-        // if (! $user) {
-
-        //     //flash('Wrong email or password')->error();
-        //     return response()->json([
-        //         'message' => 'Wrong email or password',
-        //         'status' => 422,
-        //     ], 422);
-        //}
-        // /*
-        //  If a user with the email was found - check if the specified password
-        //  belongs to this user
-        // */
-        // if (! \Hash::check(request('password'), $user->password)) {
-        //     return response()->json([
-        //         'message' => 'Wrong email or password',
-        //         'status' => 422,
-        //     ], 422);
-        // }
-
-        // if ($user->active != 1) {
-        //     return response()->json([
-        //         'message' => 'Please activate your account',
-        //         'status' => 422,
-        //     ], 422);
-        // }
-
-        // $secret = \DB::table('oauth_clients')
-        //     ->where('id', env('PASSWORD_CLIENT_ID'))
-        //     ->first()->secret;
-
-        // // Send an internal API request to get an access token
-        // $data = [
-        //     'grant_type' => 'password',
-        //     'client_id' => env('PASSWORD_CLIENT_ID'),
-        //     'client_secret' => $secret,
-        //     'username' => request('username'),
-        //     'password' => request('password'),
-        // ];
-
-        // $request = Request::create('/oauth/token', 'POST', $data);
-
-        // $response = app()->handle($request);
-
-        // if ($response->getStatusCode() != 200) {
-        //     return response()->json([
-        //         'message' => 'Wrong email or password',
-        //         'status' => 422,
-        //     ], 422);
-        // }
-
-        // // Get the data from the response
-        // $data = json_decode($response->getContent());
-
-        // // Format the final response in a desirable format
-        // return response()->json([
-        //     'token' => $data->access_tok en,
-        //     'user' => $user,
-        //     'status' => 200,
-        // ]);
+        }        
+       
     }
 
     public function logout()
     {
         $accessToken = auth()->user()->token();
-
+       \Log::info($accessToken);
         $refreshToken = \DB::table('oauth_refresh_tokens')
             ->where('access_token_id', $accessToken->id)
             ->update([
