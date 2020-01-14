@@ -23,19 +23,17 @@ Route::get('permissionrole/detach', 'PermissionRoleController@detach');
 Route::get('permissionrole', 'PermissionRoleController@index');
 Route::resource('role','RoleController');
 Route::resource('counties','CountyController');
-// Route::resource('/facilities', 'FacilityController');
-// Route::resource('/questions', 'QuestionController');
-// Route::get('/org_units', 'FacilityController@org_units');
-// Route::get('/question_per_checklist/{id}', 'QuestionController@question_per_checklist');
-
 Route::middleware('cors:api')->group( function () {
 	Route::resource('/facilities', 'FacilityController');
 	Route::resource('/questions', 'QuestionController');
 	Route::get('/org_units', 'FacilityController@org_units');
-	Route::get('/question_per_checklist/{id}', 'QuestionController@question_per_checklist');
+	Route::get('/get_sdps', 'FacilityController@get_sdps');
+	Route::get('/question_per_checklist/{id}/{facility}/{sdp}', 'QuestionController@question_per_checklist');
+	Route::get('/specific_checklist_survey/{id}', 'SurveyController@specific_checklist_survey');
+	Route::get('/survey_data/{id}', 'SurveyController@survey_data');
 });
 Route::middleware('auth:api')->group( function () {
 	Route::post('/logout', 'Auth\APIController@logout');
     Route::get('/get-user', 'Auth\APIController@getUser');
-	Route::resource('jobs', 'API\JobController');
+	
 });
